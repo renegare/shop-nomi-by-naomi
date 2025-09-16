@@ -1,0 +1,191 @@
+{% liquid
+  assign button_text = block.settings.button_text
+  assign button_link = block.settings.button_link
+  assign button_style = block.settings.button_style
+  assign button_size = block.settings.button_size
+  assign open_in_new_tab = block.settings.open_in_new_tab
+  assign icon = block.settings.icon
+%}
+
+{% if button_text != blank and button_link != blank %}
+  <a 
+    href="{{ button_link }}" 
+    class="nomi-button nomi-button--{{ button_style }} nomi-button--{{ button_size }}"
+    {% if open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+  >
+    {% if icon != blank %}
+      <span class="nomi-button__icon">{{ icon }}</span>
+    {% endif %}
+    <span class="nomi-button__text">{{ button_text }}</span>
+  </a>
+{% endif %}
+
+{% stylesheet %}
+  .nomi-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    text-align: center;
+  }
+
+  .nomi-button--small {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.875rem;
+    min-height: 36px;
+  }
+
+  .nomi-button--medium {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1rem;
+    min-height: 48px;
+  }
+
+  .nomi-button--large {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1.125rem;
+    min-height: 56px;
+  }
+
+  .nomi-button--primary {
+    background-color: var(--nomi-primary);
+    color: var(--nomi-text-light);
+    border-color: var(--nomi-primary);
+  }
+
+  .nomi-button--primary:hover {
+    background-color: var(--nomi-dark);
+    border-color: var(--nomi-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .nomi-button--secondary {
+    background-color: transparent;
+    color: var(--nomi-primary);
+    border-color: var(--nomi-primary);
+  }
+
+  .nomi-button--secondary:hover {
+    background-color: var(--nomi-primary);
+    color: var(--nomi-text-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .nomi-button--outline {
+    background-color: transparent;
+    color: var(--nomi-text-dark);
+    border-color: var(--nomi-text-dark);
+  }
+
+  .nomi-button--outline:hover {
+    background-color: var(--nomi-text-dark);
+    color: var(--nomi-text-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .nomi-button--ghost {
+    background-color: transparent;
+    color: var(--nomi-primary);
+    border-color: transparent;
+  }
+
+  .nomi-button--ghost:hover {
+    background-color: rgba(139, 69, 19, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .nomi-button__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nomi-button__text {
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Button",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Click me"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        },
+        {
+          "value": "ghost",
+          "label": "Ghost"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open in New Tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Icon (HTML)",
+      "info": "Add HTML for an icon (e.g., →, ←, ✕)"
+    }
+  ]
+}
+{% endschema %}

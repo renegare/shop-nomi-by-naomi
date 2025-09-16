@@ -1,0 +1,272 @@
+{% liquid
+  assign section_title = section.settings.section_title
+  assign collection = section.settings.collection
+  assign max_products = section.settings.max_products
+  assign view_all_text = section.settings.view_all_text
+  assign view_all_link = section.settings.view_all_link
+%}
+
+<div class="nomi-bestsellers nomi-section">
+  <div class="nomi-container">
+    <div class="nomi-bestsellers__header">
+      {% if section_title != blank %}
+        <h2 class="nomi-heading nomi-heading--large nomi-bestsellers__title">{{ section_title }}</h2>
+      {% endif %}
+      
+      {% if view_all_text != blank and view_all_link != blank %}
+        <a href="{{ view_all_link }}" class="nomi-bestsellers__view-all">
+          {{ view_all_text }}
+        </a>
+      {% endif %}
+    </div>
+    
+    <div class="nomi-bestsellers__grid nomi-grid nomi-grid--4">
+      {% if collection != blank and collection.products.size > 0 %}
+        {% for product in collection.products limit: max_products %}
+          <div class="nomi-product-card">
+            {% if product.featured_image %}
+              <a href="{{ product.url }}" class="nomi-product-card__link">
+                {{
+                  product.featured_image
+                  | image_url: width: 400
+                  | image_tag:
+                    width: product.featured_image.width,
+                    height: product.featured_image.height,
+                    alt: product.featured_image.alt,
+                    class: 'nomi-product-card__image',
+                    loading: 'lazy'
+                }}
+              </a>
+            {% else %}
+              <div class="nomi-product-card__placeholder">
+                <p>No image available</p>
+              </div>
+            {% endif %}
+            
+            <div class="nomi-product-card-content">
+              <h3 class="nomi-product-card__title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              
+              <div class="nomi-product-card__price">
+                {% if product.compare_at_price > product.price %}
+                  <span class="nomi-product-card__price--sale">{{ product.price | money }}</span>
+                  <span class="nomi-product-card__price--compare">{{ product.compare_at_price | money }}</span>
+                {% else %}
+                  <span class="nomi-product-card__price--regular">{{ product.price | money }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..max_products) %}
+          <div class="nomi-product-card nomi-product-card--placeholder">
+            <div class="nomi-product-card__placeholder">
+              <p>Product {{ i }}</p>
+            </div>
+            <div class="nomi-product-card-content">
+              <h3 class="nomi-product-card__title">Sample Product {{ i }}</h3>
+              <div class="nomi-product-card__price">
+                <span class="nomi-product-card__price--regular">${{ i | times: 50 | plus: 100 }}</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .nomi-bestsellers {
+    background-color: var(--nomi-light);
+  }
+
+  .nomi-bestsellers__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .nomi-bestsellers__title {
+    margin: 0;
+  }
+
+  .nomi-bestsellers__view-all {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    color: var(--nomi-primary);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nomi-bestsellers__view-all:hover {
+    color: var(--nomi-dark);
+    text-decoration: underline;
+  }
+
+  .nomi-bestsellers__grid {
+    gap: var(--spacing-lg);
+  }
+
+  .nomi-product-card {
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nomi-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nomi-product-card__link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .nomi-product-card__image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .nomi-product-card__placeholder {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, var(--nomi-secondary) 0%, var(--nomi-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nomi-text-light);
+  }
+
+  .nomi-product-card__placeholder p {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+  }
+
+  .nomi-product-card-content {
+    padding: var(--spacing-md);
+  }
+
+  .nomi-product-card__title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: 1.125rem;
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--nomi-text-dark);
+  }
+
+  .nomi-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nomi-product-card__title a:hover {
+    color: var(--nomi-primary);
+  }
+
+  .nomi-product-card__price {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  .nomi-product-card__price--regular,
+  .nomi-product-card__price--sale {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: 1.25rem;
+    color: var(--nomi-primary);
+  }
+
+  .nomi-product-card__price--compare {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-regular);
+    font-size: 1rem;
+    color: var(--nomi-text-muted);
+    text-decoration: line-through;
+  }
+
+  .nomi-product-card--placeholder {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .nomi-bestsellers__header {
+      text-align: center;
+    }
+    
+    .nomi-bestsellers__view-all {
+      margin-top: var(--spacing-sm);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Bestsellers",
+  "tag": "section",
+  "class": "nomi-bestsellers-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Our Bestsellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum Products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "View All Link"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Text",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nomi Bestsellers",
+      "category": "Nomi Sections"
+    }
+  ]
+}
+{% endschema %}

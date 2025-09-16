@@ -1,0 +1,195 @@
+{% liquid
+  assign section_title = section.settings.section_title
+  assign section_description = section.settings.section_description
+  assign button_text = section.settings.button_text
+  assign placeholder_text = section.settings.placeholder_text
+%}
+
+<div class="nomi-newsletter nomi-section nomi-section--light">
+  <div class="nomi-container">
+    <div class="nomi-newsletter__content">
+      <div class="nomi-newsletter__text">
+        {% if section_title != blank %}
+          <h2 class="nomi-heading nomi-heading--medium">{{ section_title }}</h2>
+        {% endif %}
+        
+        {% if section_description != blank %}
+          <p class="nomi-text">{{ section_description }}</p>
+        {% endif %}
+      </div>
+      
+      <div class="nomi-newsletter__form-wrapper">
+        {% form 'customer' %}
+          <div class="nomi-newsletter-form">
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="{{ placeholder_text | default: 'Email address' }}"
+              class="nomi-newsletter__input"
+              required
+            >
+            <button type="submit" class="nomi-button nomi-button--primary">
+              {{ button_text | default: 'Subscribe' }}
+            </button>
+          </div>
+          
+          {% if form.posted_successfully? %}
+            <p class="nomi-newsletter__success">
+              Thank you for subscribing to our newsletter!
+            </p>
+          {% endif %}
+          
+          {% if form.errors %}
+            <div class="nomi-newsletter__errors">
+              {% for field in form.errors %}
+                <p class="nomi-newsletter__error">
+                  {{ field | capitalize }}: {{ form.errors[field] }}
+                </p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .nomi-newsletter {
+    background-color: var(--nomi-light);
+  }
+
+  .nomi-newsletter__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-3xl);
+    align-items: center;
+  }
+
+  .nomi-newsletter__text {
+    text-align: left;
+  }
+
+  .nomi-newsletter__form-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .nomi-newsletter-form {
+    display: flex;
+    gap: var(--spacing-sm);
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .nomi-newsletter__input {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--nomi-secondary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    background: white;
+    color: var(--nomi-text-dark);
+    transition: border-color 0.3s ease;
+  }
+
+  .nomi-newsletter__input:focus {
+    outline: none;
+    border-color: var(--nomi-primary);
+  }
+
+  .nomi-newsletter__input::placeholder {
+    color: var(--nomi-text-muted);
+  }
+
+  .nomi-newsletter__success {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    color: var(--nomi-primary);
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: var(--radius-sm);
+  }
+
+  .nomi-newsletter__errors {
+    margin-top: var(--spacing-sm);
+  }
+
+  .nomi-newsletter__error {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    color: #dc3545;
+    text-align: center;
+    margin: var(--spacing-xs) 0;
+    padding: var(--spacing-sm);
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (max-width: 768px) {
+    .nomi-newsletter__content {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+      text-align: center;
+    }
+    
+    .nomi-newsletter__text {
+      text-align: center;
+    }
+    
+    .nomi-newsletter-form {
+      flex-direction: column;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Newsletter",
+  "tag": "section",
+  "class": "nomi-newsletter-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Join our journal"
+    },
+    {
+      "type": "text",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "Stories on fabric, craft, and style. No spam."
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Email Placeholder Text",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Subscribe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nomi Newsletter",
+      "category": "Nomi Sections"
+    }
+  ]
+}
+{% endschema %}

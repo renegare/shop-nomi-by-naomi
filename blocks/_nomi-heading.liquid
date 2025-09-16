@@ -1,0 +1,242 @@
+{% liquid
+  assign heading_text = block.settings.heading_text
+  assign heading_level = block.settings.heading_level
+  assign heading_style = block.settings.heading_style
+  assign text_alignment = block.settings.text_alignment
+  assign text_color = block.settings.text_color
+  assign max_width = block.settings.max_width
+%}
+
+{% if heading_text != blank %}
+  <{{ heading_level }} class="nomi-heading nomi-heading--{{ heading_style }} nomi-heading--{{ text_alignment }}" style="color: {{ text_color }}; max-width: {{ max_width }};">
+    {{ heading_text }}
+  </{{ heading_level }}>
+{% endif %}
+
+{% stylesheet %}
+  .nomi-heading {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-bold);
+    color: var(--nomi-text-dark);
+    margin: 0 0 var(--spacing-lg) 0;
+    line-height: 1.2;
+  }
+
+  .nomi-heading--display {
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .nomi-heading--h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+  }
+
+  .nomi-heading--h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+  }
+
+  .nomi-heading--h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.3;
+  }
+
+  .nomi-heading--h4 {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  .nomi-heading--h5 {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: 1.4;
+  }
+
+  .nomi-heading--h6 {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .nomi-heading--left {
+    text-align: left;
+  }
+
+  .nomi-heading--center {
+    text-align: center;
+  }
+
+  .nomi-heading--right {
+    text-align: right;
+  }
+
+  .nomi-heading--accent {
+    color: var(--nomi-accent);
+  }
+
+  .nomi-heading--primary {
+    color: var(--nomi-primary);
+  }
+
+  .nomi-heading--light {
+    color: var(--nomi-text-light);
+  }
+
+  .nomi-heading--muted {
+    color: var(--nomi-text-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Heading",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading Text",
+      "default": "Your Heading Here"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading Level",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "Heading Style",
+      "options": [
+        {
+          "value": "display",
+          "label": "Display"
+        },
+        {
+          "value": "h1",
+          "label": "H1 Style"
+        },
+        {
+          "value": "h2",
+          "label": "H2 Style"
+        },
+        {
+          "value": "h3",
+          "label": "H3 Style"
+        },
+        {
+          "value": "h4",
+          "label": "H4 Style"
+        },
+        {
+          "value": "h5",
+          "label": "H5 Style"
+        },
+        {
+          "value": "h6",
+          "label": "H6 Style"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        {
+          "value": "var(--nomi-text-dark)",
+          "label": "Dark"
+        },
+        {
+          "value": "var(--nomi-text-light)",
+          "label": "Light"
+        },
+        {
+          "value": "var(--nomi-primary)",
+          "label": "Primary"
+        },
+        {
+          "value": "var(--nomi-accent)",
+          "label": "Accent"
+        },
+        {
+          "value": "var(--nomi-text-muted)",
+          "label": "Muted"
+        }
+      ],
+      "default": "var(--nomi-text-dark)"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Max Width",
+      "options": [
+        {
+          "value": "100%",
+          "label": "Full Width"
+        },
+        {
+          "value": "800px",
+          "label": "Medium"
+        },
+        {
+          "value": "600px",
+          "label": "Small"
+        },
+        {
+          "value": "400px",
+          "label": "Extra Small"
+        }
+      ],
+      "default": "100%"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,252 @@
+{% liquid
+  assign section_title = section.settings.section_title
+  assign section_subtitle = section.settings.section_subtitle
+  assign section_description = section.settings.section_description
+  assign section_image = section.settings.section_image
+  assign primary_button_text = section.settings.primary_button_text
+  assign primary_button_link = section.settings.primary_button_link
+  assign secondary_button_text = section.settings.secondary_button_text
+  assign secondary_button_link = section.settings.secondary_button_link
+  assign media_position = section.settings.media_position
+%}
+
+<div class="nomi-signature-product nomi-section nomi-section--light">
+  <div class="nomi-container">
+    <div class="nomi-signature-product__grid nomi-grid nomi-grid--2 {% if media_position == 'right' %}nomi-signature-product__grid--reversed{% endif %}">
+      <div class="nomi-signature-product__content">
+        {% if section_subtitle != blank %}
+          <p class="nomi-signature-product__subtitle">{{ section_subtitle }}</p>
+        {% endif %}
+        
+        {% if section_title != blank %}
+          <h2 class="nomi-heading nomi-heading--large">{{ section_title }}</h2>
+        {% endif %}
+        
+        {% if section_description != blank %}
+          <div class="nomi-text nomi-text--large">
+            {{ section_description }}
+          </div>
+        {% endif %}
+        
+        <div class="nomi-signature-product__buttons">
+          {% if primary_button_text != blank and primary_button_link != blank %}
+            <a href="{{ primary_button_link }}" class="nomi-button nomi-button--primary">
+              {{ primary_button_text }}
+            </a>
+          {% endif %}
+          
+          {% if secondary_button_text != blank and secondary_button_link != blank %}
+            <a href="{{ secondary_button_link }}" class="nomi-button nomi-button--secondary">
+              {{ secondary_button_text }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="nomi-signature-product__media">
+        {% if section_image != blank %}
+          {{
+            section_image
+            | image_url: width: 800
+            | image_tag:
+              width: section_image.width,
+              height: section_image.height,
+              alt: section_image.alt,
+              class: 'nomi-signature-product__image',
+              loading: 'lazy'
+          }}
+        {% else %}
+          <div class="nomi-signature-product__placeholder">
+            <div class="nomi-signature-product__placeholder-content">
+              <p>Add an image to showcase your signature product</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .nomi-signature-product {
+    background-color: var(--nomi-light);
+  }
+
+  .nomi-signature-product__grid {
+    align-items: center;
+    gap: var(--spacing-3xl);
+  }
+
+  .nomi-signature-product__grid--reversed {
+    direction: rtl;
+  }
+
+  .nomi-signature-product__grid--reversed > * {
+    direction: ltr;
+  }
+
+  .nomi-signature-product__content {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .nomi-signature-product__subtitle {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: 1rem;
+    color: var(--nomi-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  .nomi-signature-product__buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+    flex-wrap: wrap;
+  }
+
+  .nomi-signature-product__media {
+    position: relative;
+    height: 500px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .nomi-signature-product__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .nomi-signature-product__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--nomi-secondary) 0%, var(--nomi-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nomi-signature-product__placeholder-content {
+    text-align: center;
+    color: var(--nomi-text-light);
+  }
+
+  .nomi-signature-product__placeholder-content p {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: 1.125rem;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .nomi-signature-product__grid {
+      gap: var(--spacing-xl);
+    }
+    
+    .nomi-signature-product__media {
+      height: 300px;
+    }
+    
+    .nomi-signature-product__buttons {
+      justify-content: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Signature Product",
+  "tag": "section",
+  "class": "nomi-signature-product-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "Our signature product"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Tailored silhouettes with timeless craftsmanship"
+    },
+    {
+      "type": "richtext",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "<p>Rooted in African fashion and lifestyle, our garments blend expressive fabrics with refined construction, designed to be worn, loved, and passed down.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_image",
+      "label": "Section Image"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Explore the collection"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nomi Signature Product",
+      "category": "Nomi Sections"
+    }
+  ]
+}
+{% endschema %}
