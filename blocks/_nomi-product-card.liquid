@@ -1,0 +1,211 @@
+{% liquid
+  assign product = block.settings.product
+  assign show_price = block.settings.show_price
+  assign show_title = block.settings.show_title
+  assign image_ratio = block.settings.image_ratio
+  assign card_style = block.settings.card_style
+%}
+
+<div class="nomi-product-card nomi-product-card--{{ card_style }}">
+  {% if product != blank and product.featured_image %}
+    <a href="{{ product.url }}" class="nomi-product-card__link">
+      {{
+        product.featured_image
+        | image_url: width: 400
+        | image_tag:
+          width: product.featured_image.width,
+          height: product.featured_image.height,
+          alt: product.featured_image.alt,
+          class: 'nomi-product-card__image',
+          loading: 'lazy'
+      }}
+    </a>
+  {% else %}
+    <div class="nomi-product-card__placeholder">
+      <p>No image available</p>
+    </div>
+  {% endif %}
+  
+  <div class="nomi-product-card-content">
+    {% if show_title and product != blank %}
+      <h3 class="nomi-product-card__title">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
+    {% elsif show_title %}
+      <h3 class="nomi-product-card__title">Sample Product</h3>
+    {% endif %}
+    
+    {% if show_price and product != blank %}
+      <div class="nomi-product-card__price">
+        {% if product.compare_at_price > product.price %}
+          <span class="nomi-product-card__price--sale">{{ product.price | money }}</span>
+          <span class="nomi-product-card__price--compare">{{ product.compare_at_price | money }}</span>
+        {% else %}
+          <span class="nomi-product-card__price--regular">{{ product.price | money }}</span>
+        {% endif %}
+      </div>
+    {% elsif show_price %}
+      <div class="nomi-product-card__price">
+        <span class="nomi-product-card__price--regular">$120</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .nomi-product-card {
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nomi-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nomi-product-card--minimal {
+    box-shadow: none;
+    border: 1px solid var(--nomi-secondary);
+  }
+
+  .nomi-product-card--minimal:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .nomi-product-card__link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .nomi-product-card__image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .nomi-product-card__placeholder {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, var(--nomi-secondary) 0%, var(--nomi-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nomi-text-light);
+  }
+
+  .nomi-product-card__placeholder p {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+  }
+
+  .nomi-product-card-content {
+    padding: var(--spacing-md);
+  }
+
+  .nomi-product-card__title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: 1.125rem;
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--nomi-text-dark);
+  }
+
+  .nomi-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nomi-product-card__title a:hover {
+    color: var(--nomi-primary);
+  }
+
+  .nomi-product-card__price {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  .nomi-product-card__price--regular,
+  .nomi-product-card__price--sale {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: 1.25rem;
+    color: var(--nomi-primary);
+  }
+
+  .nomi-product-card__price--compare {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-regular);
+    font-size: 1rem;
+    color: var(--nomi-text-muted);
+    text-decoration: line-through;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Product Card",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show Product Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Ratio",
+      "options": [
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card Style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal"
+        }
+      ],
+      "default": "default"
+    }
+  ]
+}
+{% endschema %}

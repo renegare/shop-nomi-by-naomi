@@ -1,0 +1,240 @@
+{% liquid
+  assign hero_image = section.settings.hero_image
+  assign hero_title = section.settings.hero_title
+  assign hero_subtitle = section.settings.hero_subtitle
+  assign hero_button_text = section.settings.hero_button_text
+  assign hero_button_link = section.settings.hero_button_link
+  assign hero_secondary_button_text = section.settings.hero_secondary_button_text
+  assign hero_secondary_button_link = section.settings.hero_secondary_button_link
+%}
+
+<div class="nomi-hero-section">
+  <div class="nomi-hero__image-wrapper">
+    {% if hero_image != blank %}
+      {{
+        hero_image
+        | image_url: width: 1920
+        | image_tag:
+          width: hero_image.width,
+          height: hero_image.height,
+          alt: hero_image.alt,
+          class: 'nomi-hero__image',
+          loading: 'eager'
+      }}
+    {% else %}
+      <div class="nomi-hero__placeholder">
+        <div class="nomi-hero__placeholder-content">
+          <h1>{{ hero_title | default: 'Curated African Luxury for the Culture' }}</h1>
+        </div>
+      </div>
+    {% endif %}
+    
+    <div class="nomi-hero__overlay"></div>
+    
+    <div class="nomi-hero__content">
+      <div class="nomi-container">
+        <div class="nomi-hero__text">
+          {% if hero_title != blank %}
+            <h1 class="nomi-hero__title">{{ hero_title }}</h1>
+          {% endif %}
+          
+          {% if hero_subtitle != blank %}
+            <p class="nomi-hero__subtitle">{{ hero_subtitle }}</p>
+          {% endif %}
+          
+          <div class="nomi-hero__buttons">
+            {% if hero_button_text != blank and hero_button_link != blank %}
+              <a href="{{ hero_button_link }}" class="nomi-button nomi-button--primary">
+                {{ hero_button_text }}
+              </a>
+            {% endif %}
+            
+            {% if hero_secondary_button_text != blank and hero_secondary_button_link != blank %}
+              <a href="{{ hero_secondary_button_link }}" class="nomi-button nomi-button--secondary">
+                {{ hero_secondary_button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .nomi-hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .nomi-hero__image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .nomi-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .nomi-hero__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--nomi-secondary) 0%, var(--nomi-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nomi-hero__placeholder-content h1 {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--nomi-text-dark);
+    text-align: center;
+    margin: 0;
+  }
+
+  .nomi-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(44, 24, 16, 0.3) 0%,
+      rgba(44, 24, 16, 0.1) 50%,
+      rgba(44, 24, 16, 0.4) 100%
+    );
+    z-index: 2;
+  }
+
+  .nomi-hero__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .nomi-hero__text {
+    max-width: 600px;
+    text-align: left;
+  }
+
+  .nomi-hero__title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    color: var(--nomi-text-light);
+    margin: 0 0 var(--spacing-lg) 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .nomi-hero__subtitle {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-regular);
+    font-size: 1.25rem;
+    line-height: 1.4;
+    color: var(--nomi-text-light);
+    margin: 0 0 var(--spacing-xl) 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .nomi-hero__buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .nomi-hero__text {
+      text-align: center;
+    }
+    
+    .nomi-hero__buttons {
+      justify-content: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nomi Hero Section",
+  "tag": "section",
+  "class": "nomi-hero-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "Curated African Luxury for the Culture"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "Discover our collection of handcrafted African textiles and luxury garments that celebrate heritage and modern elegance."
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "hero_secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "hero_secondary_button_link",
+      "label": "Secondary Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nomi Hero Section",
+      "category": "Nomi Sections"
+    }
+  ]
+}
+{% endschema %}
